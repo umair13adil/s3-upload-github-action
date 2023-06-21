@@ -12,7 +12,7 @@ const s3 = new aws.S3({
 const uploadFile = (fileName) => {
   if (fs.lstatSync(fileName).isDirectory()) {
     fs.readdirSync(fileName).forEach((file) => {
-      uploadFile(`${fileName}/${file}`);
+      uploadFile(`${file}`);
     });
   } else {
     const fileContent = fs.readFileSync(fileName);
@@ -20,7 +20,7 @@ const uploadFile = (fileName) => {
     // Setting up S3 upload parameters
     const params = {
       Bucket: process.env.S3_BUCKET,
-      Key: `${process.env.S3_PREFIX || ""}/`,
+      Key: `${process.env.S3_PREFIX || ""}/${path.normalize(fileName)}`,
       Body: fileContent,
     };
     const acl = process.env.S3_ACL;
